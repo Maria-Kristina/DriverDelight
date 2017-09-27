@@ -15,13 +15,13 @@ import java.util.List;
 
 public class CustomAdapter extends BaseAdapter {
     private Context mContext;
-    private List<String> phoneList;
+    private List<Contact> phoneList;
     private LayoutInflater mInflater;
 
     private TextView nameView;
 
 
-    public CustomAdapter(Context context, List<String> list) {
+    public CustomAdapter(Context context, List<Contact> list) {
         this.mContext = context;
         this.phoneList = list;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -34,7 +34,7 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Contact getItem(int position) {
         return phoneList.get(position);
     }
 
@@ -47,8 +47,8 @@ public class CustomAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
         View rowView = mInflater.inflate(R.layout.list_item_layout, viewGroup, false);
         nameView = rowView.findViewById(R.id.nameView);
-        Object o = getItem(position);
-        nameView.setText(o.toString());
+        Contact contact = getItem(position);
+        nameView.setText(contact.getName());
 
         return rowView;
     }
