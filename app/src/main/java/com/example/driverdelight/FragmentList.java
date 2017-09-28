@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,15 +30,13 @@ public class FragmentList extends ListFragment {
     private FragmentDetail fragmentDetail;
     Activity activity;
     CustomAdapter adapter;
-
-
     private List<Contact> contactList;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 500;
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (context instanceof Activity){
             activity = (Activity) context;
         }
@@ -47,10 +46,10 @@ public class FragmentList extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.list_fragment, container, false);
-
         fragmentDetail = new FragmentDetail();
         contactList = new ArrayList<>();
         fetchContacts();
+        Collections.sort(contactList);
 
         adapter = new CustomAdapter(
                 view.getContext(), contactList);
