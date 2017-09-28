@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -28,10 +29,9 @@ import java.util.List;
 
 public class FragmentList extends ListFragment {
     private FragmentDetail fragmentDetail;
-    Activity activity;
-    CustomAdapter adapter;
-    private List<Contact> contactList;
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 500;
+    private Activity activity;
+    private CustomAdapter adapter;
+    private View view;
 
 
     @Override
@@ -44,16 +44,11 @@ public class FragmentList extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.list_fragment, container, false);
+        view = inflater.inflate(R.layout.list_fragment, container, false);
         fragmentDetail = new FragmentDetail();
-        contactList = new ArrayList<>();
-        fetchContacts();
-        Collections.sort(contactList);
 
-        adapter = new CustomAdapter(
-                view.getContext(), contactList);
-        setListAdapter(adapter);
+        LoadContactsTask loadContactsTask = new LoadContactsTask();
+        loadContactsTask.execute();
 
         return view;
     }
@@ -62,7 +57,6 @@ public class FragmentList extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-
 
         //sends the contact from the list to mainActivity
         try {
@@ -82,61 +76,81 @@ public class FragmentList extends ListFragment {
 
     }
 
+    private class LoadContactsTask extends AsyncTask <Void, Void, List<Contact>>{
 
-    public void fetchContacts() {
+        @Override
+        protected List<Contact> doInBackground(Void... voids) {
+            return fetchContacts();
+        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && activity.checkSelfPermission(Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
+        @Override
+        protected void onPostExecute(List<Contact> contacts) {
+            Collections.sort(contacts);
+            adapter = new CustomAdapter(
+                    view.getContext(), contacts);
+            setListAdapter(adapter);
+        }
 
-            requestPermissions(
-                    new String[]{Manifest.permission.READ_CONTACTS},
-                    PERMISSIONS_REQUEST_READ_CONTACTS);
+        private List<Contact> fetchContacts() {
+            List<Contact> list = new ArrayList<>();
+            int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && activity.checkSelfPermission(Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
 
-        } else {
-
-            String phoneNumber = null;
-
-            Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
-            String _ID = ContactsContract.Contacts._ID;
-            String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
-            String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
-
-            Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-            String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
-            String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-
-            ContentResolver contentResolver = getActivity().getContentResolver();
-            Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
+                requestPermissions(
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        PERMISSIONS_REQUEST_READ_CONTACTS);
 
 
-            // Loop for every contact in the phone
-            if (cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
-                    String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
-                    int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+            } else {
 
-                    if (hasPhoneNumber > 0) {
+                String phoneNumber;
 
-                        // Query and loop for every phone number of the contact
-                        Cursor phoneCursor = contentResolver.query(
-                                PhoneCONTENT_URI, null,
-                                Phone_CONTACT_ID + " = ?",
-                                new String[]{contact_id}, null);
+                Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
+                String _ID = ContactsContract.Contacts._ID;
+                String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
+                String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
 
-                        while (phoneCursor.moveToNext()) {
-                            phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
-                            Contact contact = new Contact(name, phoneNumber);
-                            contactList.add(contact);
+                Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+                String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+                String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+
+                ContentResolver contentResolver = getActivity().getContentResolver();
+                Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
+
+
+                // Loop for every contact in the phone
+                if (cursor.getCount() > 0) {
+                    while (cursor.moveToNext()) {
+                        String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
+                        String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
+
+                        int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+
+                        if (hasPhoneNumber > 0) {
+
+                            // Query and loop for every phone number of the contact
+                            Cursor phoneCursor = contentResolver.query(
+                                    PhoneCONTENT_URI, null,
+                                    Phone_CONTACT_ID + " = ?",
+                                    new String[]{contact_id}, null);
+
+                            while (phoneCursor.moveToNext()) {
+                                phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+                                Contact contact = new Contact(name, phoneNumber, contact_id);
+                                list.add(contact);
+                            }
+                            phoneCursor.close();
                         }
-                        phoneCursor.close();
                     }
                 }
-
+                cursor.close();
             }
-
+            return list;
         }
+
+
     }
 }
