@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
- * Created by User1 on 22.9.2017.
+ * Created by M-K on 22.9.2017.
  */
 
 public class PhoneActivity extends Activity implements OnItemSelectedListener{

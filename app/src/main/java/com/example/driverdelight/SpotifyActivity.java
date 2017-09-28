@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * Created by User1 on 22.9.2017.
+ * Created by M-K on 22.9.2017.
  */
 
 public class SpotifyActivity extends Activity {
