@@ -3,11 +3,13 @@ package com.example.driverdelight;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -16,6 +18,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Check whether bluetooth is supported
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "BLE not supported", Toast.LENGTH_SHORT).show();
+        }
 
         ImageButton phoneButton = (ImageButton)findViewById(R.id.phoneButton);
         ImageButton spotifyButton = (ImageButton)findViewById(R.id.spotifyButton);
