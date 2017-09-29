@@ -115,7 +115,7 @@ public class FragmentList extends ListFragment {
 
                 Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
                 String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
-                String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+                String NUMBER = ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER;
 
                 ContentResolver contentResolver = getActivity().getContentResolver();
                 Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
@@ -123,10 +123,11 @@ public class FragmentList extends ListFragment {
 
                 // Loop for every contact in the phone
                 if (cursor.getCount() > 0) {
+                    List<String> phoneNumbers = new ArrayList<>();
+
                     while (cursor.moveToNext()) {
                         String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
                         String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
-
                         int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
 
                         if (hasPhoneNumber > 0) {
@@ -139,8 +140,12 @@ public class FragmentList extends ListFragment {
 
                             while (phoneCursor.moveToNext()) {
                                 phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
-                                Contact contact = new Contact(name, phoneNumber, contact_id);
-                                list.add(contact);
+
+                                if (phoneNumbers.contains(phoneNumber) == false){
+                                    phoneNumbers.add(phoneNumber);
+                                    list.add(new Contact(name, phoneNumber,contact_id));
+                                }
+
                             }
                             phoneCursor.close();
                         }
