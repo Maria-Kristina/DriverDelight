@@ -12,7 +12,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
         int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
@@ -46,6 +52,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         phoneButton.setOnClickListener(this);
         spotifyButton.setOnClickListener(this);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        
+        // TO-DO: Implement toolbar action
+
+        switch (item.getItemId()) {
+            case R.id.action_scan:
+                Toast.makeText(this, "Scan for device", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_address:
+                Toast.makeText(this, "Manually enter address", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_last:
+                Toast.makeText(this, "Use last device address", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return true;
     }
 
     @Override
@@ -101,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void retrieveMetawearDevice(String address) {
+
+
         final BluetoothDevice remoteDevice = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE))
                 .getAdapter().getRemoteDevice(address);
         board = serviceBinder.getMetaWearBoard(remoteDevice);

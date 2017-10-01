@@ -3,5 +3,7 @@
 
 
     <!-- Bluetooth and metawear strings -->
-    <string name="bt_scan_btn">Scan</string>
+    <string name="bt_scan_btn">Scan for BLE device</string>
+    <string name="connect_to_address">Connect via address</string>
+    <string name="connect_to_last_device">Use last device</string>
 </resources>

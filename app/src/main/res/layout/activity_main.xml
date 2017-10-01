@@ -3,34 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.driverdelight.MainActivity"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    tools:context="com.example.driverdelight.MainActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
 
     <ImageButton
         android:id="@+id/phoneButton"
-
-        android:elevation="5dp"
-        android:src="@drawable/phone3"
-        android:scaleType="fitCenter"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:background="@drawable/buttonshape"
+        android:layout_alignStart="@+id/spotifyButton"
+        android:layout_below="@id/toolbar"
         android:layout_marginTop="35dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/spotifyButton" />
+        android:background="@drawable/buttonshape"
+        android:elevation="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/phone3" />
 
     <ImageButton
         android:id="@+id/spotifyButton"
 
-        android:elevation="5dp"
-        android:src="@drawable/spotify"
-        android:scaleType="fitCenter"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:background="@drawable/buttonshape"
         android:layout_below="@+id/phoneButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:background="@drawable/buttonshape"
+        android:elevation="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/spotify" />
 
 </RelativeLayout>
