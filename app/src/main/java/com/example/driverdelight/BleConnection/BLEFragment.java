@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,27 +79,23 @@ public class BLEFragment extends ListFragment {
             Intent btIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             getActivity().startActivityForResult(btIntent, 1);
         } else if (!isScanning) {
-            Log.d("BLE_Action", "Scanning for device");
-            Toast.makeText(getActivity(), "Scanning", Toast.LENGTH_SHORT).show();
+            makeToast("Scanning");
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d("BLE_Action", "Scan ended");
                     if (isScanning)
-                        Toast.makeText(getActivity(), "Scan finished", Toast.LENGTH_SHORT).show();
                     isScanning = false;
                     bluetoothAdapter.stopLeScan(bleScanCallback);
                 }
             }, SCAN_PERIOD);
             isScanning = true;
             bluetoothAdapter.startLeScan(bleScanCallback);
-        } else Toast.makeText(getActivity(), "Scan already in progress", Toast.LENGTH_SHORT).show();
+        } else makeToast("Scan already in progress");
     }
 
     private void addDevice(BluetoothDevice bluetoothDevice, int rssi) {
         String addr = bluetoothDevice.getAddress();
         if (!deviceHashMap.containsKey(addr)) {
-            Log.d("BLE_Action", "Device found");
             BLEDevice newDevice = new BLEDevice(bluetoothDevice);
             newDevice.setRSSI(rssi);
             deviceHashMap.put(addr, newDevice);
@@ -113,6 +108,10 @@ public class BLEFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         isScanning = false;
         listener.onBleItemClick(deviceArrayList.get(position).getAddress());
+    }
+
+    private void makeToast(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     interface OnBleItemClickListener {

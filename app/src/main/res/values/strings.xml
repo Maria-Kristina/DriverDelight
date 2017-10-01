@@ -5,5 +5,10 @@
     <!-- Bluetooth and metawear strings -->
     <string name="bt_scan_btn">Scan for BLE device</string>
     <string name="connect_to_address">Connect via address</string>
-    <string name="connect_to_last_device">Use last device</string>
+    <string name="connect_to_last_device">Reconnect to last attempt</string>
+    <string name="disconnect">Disconnect</string>
+
+    <string name="device_address">Device address</string>
+    <string name="confirm">Connect</string>
+    <string name="cancel">Cancel</string>
 </resources>

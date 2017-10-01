@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.driverdelight.BleConnection.BLEActivity;
 import com.mbientlab.metawear.MetaWearBoard;
 import com.mbientlab.metawear.android.BtleService;
 import com.mbientlab.metawear.module.Led;
@@ -28,7 +30,10 @@ import com.mbientlab.metawear.module.Led;
 import bolts.Continuation;
 import bolts.Task;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        ServiceConnection, AddressDialogFragment.OnDialogConfirmListener {
+    private static final String PREFERENCE_KEY = "AddressData";
+    private static final String ADDRESS_KEY = "addressKey";
 
     private static final int REQUEST_SCAN_FOR_DEVICE = 1;
     private BtleService.LocalBinder serviceBinder;
@@ -68,13 +73,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (item.getItemId()) {
             case R.id.action_scan:
-                Toast.makeText(this, "Scan for device", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, BLEActivity.class);
+                startActivityForResult(intent, REQUEST_SCAN_FOR_DEVICE);
                 break;
             case R.id.action_address:
+                AddressDialogFragment dialog = new AddressDialogFragment();
+                dialog.show(getSupportFragmentManager(), "manual_address");
                 Toast.makeText(this, "Manually enter address", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_last:
-                Toast.makeText(this, "Use last device address", Toast.LENGTH_SHORT).show();
+                SharedPreferences data = getSharedPreferences(PREFERENCE_KEY, MODE_PRIVATE);
+                String address = data.getString(ADDRESS_KEY, null);
+                if (address != null) {
+                    makeToast("Reconnecting");
+                    retrieveMetaWearDevice(address);
+                } else makeToast("No data of previous attempts");
+                break;
+            case R.id.action_disconnect:
+                if (board != null && board.isConnected()) {
+                    disconnectDevice();
+                }
                 break;
         }
 
@@ -83,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
+        disconnectDevice();
         getApplicationContext().unbindService(this);
         super.onDestroy();
     }
@@ -126,27 +145,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SCAN_FOR_DEVICE) {
             if (resultCode == RESULT_OK) {
-                Log.d("BLE_Action", "Scan succeeded");
                 String address = data.getExtras().getString("device_address");
-                retrieveMetawearDevice(address);
-            }
+                retrieveMetaWearDevice(address);
+            } else if (resultCode == RESULT_CANCELED) makeToast("Cancelled");
         }
     }
 
-    private void retrieveMetawearDevice(String address) {
-
+    private void retrieveMetaWearDevice(String address) {
+        SharedPreferences data = getSharedPreferences(PREFERENCE_KEY, MODE_PRIVATE);
+        SharedPreferences.Editor dataOutput = data.edit();
+        dataOutput.putString(ADDRESS_KEY, address).apply();
 
         final BluetoothDevice remoteDevice = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE))
                 .getAdapter().getRemoteDevice(address);
         board = serviceBinder.getMetaWearBoard(remoteDevice);
 
-        Log.d("BLE_Action", "Attempting to connect to board");
         board.connectAsync().continueWith(new Continuation<Void, Void>() {
             @Override
             public Void then(Task<Void> task) throws Exception {
                 if (task.isFaulted()) {
-                    Log.d("BLE_Action", "Unable to connect to board");
-                    Toast.makeText(MainActivity.this, "Failed to connect", Toast.LENGTH_SHORT).show();
+                    makeToast("Failed to connect");
                 } else {
                     deviceConnected();
                 }
@@ -156,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void deviceConnected() {
-        Log.d("BLE_Action", "Connected to board");
 
         board.onUnexpectedDisconnect(new MetaWearBoard.UnexpectedDisconnectHandler() {
             @Override
@@ -168,16 +185,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Led led;
         if ((led = board.getModule(Led.class)) != null) {
             led.editPattern(Led.Color.GREEN, Led.PatternPreset.PULSE)
-                    .repeatCount((byte) 10)
+                    .repeatCount((byte) 5)
                     .commit();
             led.play();
         }
     }
 
     private void attemptToReconnect(int tries) {
-        Log.d("BLE_Action", "Reconnecting " + tries);
+        Log.d("MainActivity", "Reconnecting " + tries);
         if (tries-- == 0) {
-            Toast.makeText(this, "Unable to reconnect", Toast.LENGTH_SHORT).show();
+            makeToast("Unable to reconnect");
             return;
         }
         final int finalTries = tries;
@@ -186,9 +203,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public Void then(Task<Void> task) throws Exception {
                 if (task.isFaulted()) {
                     attemptToReconnect(finalTries);
-                } else Toast.makeText(MainActivity.this, "Reconnected", Toast.LENGTH_SHORT).show();
+                } else makeToast("Reconnected");
                 return null;
             }
         });
+    }
+
+    private void disconnectDevice() {
+        Led led = board.getModule(Led.class);
+        if (led != null) {
+            led.editPattern(Led.Color.RED, Led.PatternPreset.BLINK).repeatCount((byte) 5).commit();
+            led.play();
+        }
+        board.disconnectAsync().continueWith(new Continuation<Void, Void>() {
+            @Override
+            public Void then(Task<Void> task) throws Exception {
+                makeToast("Device disconnected");
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public void onDialogConfirm(String address) {
+        makeToast("Connecting");
+        retrieveMetaWearDevice(address);
+    }
+
+    private void makeToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }
