@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+    <!--android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/-->
 
     <ImageButton
         android:id="@+id/phoneButton"
 
-        android:src="@drawable/phone3"
-        android:scaleType="fitCenter"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="80dp"
         android:background="@drawable/buttonshape"
+        android:scaleType="fitCenter"
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="5"
-        android:layout_marginStart="80dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:src="@drawable/phone3" />
 
     <ImageButton
         android:id="@+id/spotifyButton"
 
-        android:src="@drawable/spotify"
-        android:scaleType="fitCenter"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/phoneButton"
+        android:layout_marginEnd="80dp"
         android:background="@drawable/buttonshape"
+        android:scaleType="fitCenter"
         android:shadowDy="0"
         android:shadowRadius="5"
-        android:layout_marginEnd="80dp"
-        android:layout_alignTop="@+id/phoneButton"
-        android:layout_alignParentEnd="true" />
+        android:src="@drawable/spotify" />
 
 </RelativeLayout>

@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.driverdelight">
 
-    <uses-sdk android:minSdkVersion="18"/>
-
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -26,8 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PhoneActivity"></activity>
-        <activity android:name=".SpotifyActivity"></activity>
+        <activity android:name=".BleConnection.BLEActivity" />
+        <activity android:name=".PhoneActivity" />
+        <activity android:name=".SpotifyActivity" />
     </application>
 
 </manifest>
