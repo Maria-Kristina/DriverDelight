@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.hardware.SensorEvent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -32,6 +33,7 @@ public class FragmentList extends ListFragment {
     private Activity activity;
     private CustomAdapter adapter;
     private View view;
+    public SensorEvent event;
 
 
     @Override
