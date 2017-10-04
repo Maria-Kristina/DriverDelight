@@ -28,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.mbientlab.metawear.Data;
 import com.mbientlab.metawear.MetaWearBoard;
@@ -234,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      BLE and MetaWear connection methods
     */
     private void retrieveMetaWearDevice(String address) {
-        Toast.makeText(this, getString(R.string.toast_connecting), Toast.LENGTH_SHORT).show();
         Log.i("MainActivity", getString(R.string.toast_connecting) + " to " + address);
 
         // Save device address to SharedPreference
@@ -250,8 +248,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public Void then(Task<Void> task) throws Exception {
                 if (task.isFaulted()) {
-                    Toast.makeText(MainActivity.this, getString(R.string.toast_failed_to_connect), Toast.LENGTH_SHORT).show();
-                    Log.i("MainAcivity", getString(R.string.toast_failed_to_connect));
+                    Log.i("MainActivity", getString(R.string.toast_failed_to_connect));
                 } else {
                     deviceConnected();
                 }
@@ -261,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void deviceConnected() {
-        Toast.makeText(this, R.string.toast_connected, Toast.LENGTH_SHORT).show();
         Log.i("MainActivity", getString(R.string.toast_connected));
 
         // Try to reconnect 3 times if device disconnects unexpectedly
@@ -286,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void attemptToReconnect(int tries) {
         Log.i("MainActivity", "Attempt to reconnect: " + tries);
         if (tries-- == 0) {
-            Toast.makeText(this, getString(R.string.toast_unable_to_reconnect), Toast.LENGTH_SHORT).show();
             Log.i("MainActivity", getString(R.string.toast_unable_to_reconnect));
             return;
         }
@@ -297,7 +292,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (task.isFaulted()) {
                     attemptToReconnect(finalTries);
                 } else {
-                    Toast.makeText(MainActivity.this, getString(R.string.toast_reconnected), Toast.LENGTH_SHORT).show();
                     Log.i("MainActivity", getString(R.string.toast_reconnected));
                 }
                 return null;
@@ -315,7 +309,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         board.disconnectAsync().continueWith(new Continuation<Void, Void>() {
             @Override
             public Void then(Task<Void> task) throws Exception {
-                Toast.makeText(MainActivity.this, getString(R.string.toast_disconnected), Toast.LENGTH_SHORT).show();
                 Log.i("MainActivity", getString(R.string.toast_disconnected));
                 return null;
             }
