@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
@@ -30,7 +31,7 @@ import bolts.Continuation;
 import bolts.Task;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        ServiceConnection, AddressDialogFragment.OnDialogConfirmListener {
+        ServiceConnection, AddressDialogFragment.OnDialogConfirmListener, SensorEventListener {
     private static final String DEFAULT_MAC_ADDRESS = "Ff:e3:70:08:b9:0d".toUpperCase();
     private static final String PREFERENCE_KEY = "AddressData";
     private static final String ADDRESS_KEY = "addressKey";
