@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 
@@ -19,6 +20,7 @@ public class PhoneActivity extends Activity implements SensorEventListener, OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
+        setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().add(R.id.fragmentHolder, new FragmentList()).commit();
         }
@@ -57,15 +59,15 @@ public class PhoneActivity extends Activity implements SensorEventListener, OnIt
         }
     }
 
+
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            Log.i("Sensor Changed", "onSensor Change :" + event.values[0]);
 
             if (event.values[0] < 200) {
-                setActivityBackgroundColor(0xff444444);
+                setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundDark));
 
             } else {
-                setActivityBackgroundColor(0xff888888);
+                setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
             }
         }
     }
@@ -73,6 +75,7 @@ public class PhoneActivity extends Activity implements SensorEventListener, OnIt
     public void setActivityBackgroundColor(int color) {
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(color);
+
     }
 }
 

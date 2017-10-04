@@ -16,6 +16,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -52,10 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
 
-        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},1);
         getApplicationContext().bindService(new Intent(this, BtleService.class), this, BIND_AUTO_CREATE);
 
         ImageButton phoneButton = (ImageButton)findViewById(R.id.phoneButton);
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /**LightSensor implementation*/
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
 
     }
 
@@ -262,14 +261,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onSensorChanged(SensorEvent event) {
-        if( event.sensor.getType() == Sensor.TYPE_LIGHT){
-            Log.i("Sensor Changed", "onSensor Change :" + event.values[0]);
 
-            if (event.values[0] < 200){
-                setActivityBackgroundColor(0xff444444);
-            }
-            else{
-                setActivityBackgroundColor(0xff888888);
+        if( event.sensor.getType() == Sensor.TYPE_LIGHT){
+            if (event.values[0] < 200) {
+                setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundDark));
+
+            } else {
+                setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
             }
         }
     }
@@ -277,5 +275,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setActivityBackgroundColor(int color) {
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(color);
+
     }
 }
