@@ -32,7 +32,9 @@ import bolts.Task;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         ServiceConnection, AddressDialogFragment.OnDialogConfirmListener, SensorEventListener {
+
     private static final String DEFAULT_MAC_ADDRESS = "Ff:e3:70:08:b9:0d".toUpperCase();
+
     private static final String PREFERENCE_KEY = "AddressData";
     private static final String ADDRESS_KEY = "addressKey";
 
