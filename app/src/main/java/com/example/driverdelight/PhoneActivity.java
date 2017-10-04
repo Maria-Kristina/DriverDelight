@@ -65,7 +65,7 @@ public class PhoneActivity extends Activity implements SensorEventListener, OnIt
                 setActivityBackgroundColor(0xff444444);
 
             } else {
-                setActivityBackgroundColor(0xffcccccc);
+                setActivityBackgroundColor(0xff888888);
             }
         }
     }
