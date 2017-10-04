@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 setActivityBackgroundColor(0xff444444);
             }
             else{
-                setActivityBackgroundColor(0xffcccccc);
+                setActivityBackgroundColor(0xff888888);
             }
         }
     }
