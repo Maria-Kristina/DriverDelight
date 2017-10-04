@@ -17,17 +17,22 @@ public class AddressDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        // Get MainActivity as listener
         final OnDialogConfirmListener listener = (OnDialogConfirmListener) getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // Create dialog view
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.input_address_fragment, null);
 
+        // Create dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view)
                 .setTitle(getString(R.string.dialog_title))
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // Confirm
+                        // Send address back to MainActivity
                         EditText address = view.findViewById(R.id.address_input);
                         listener.onDialogConfirm(address.getText().toString());
                     }
@@ -35,13 +40,14 @@ public class AddressDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // Cancel
+                        // Do nothing
                     }
                 });
 
         return builder.create();
     }
 
+    // Listener interface for MainActivity
     interface OnDialogConfirmListener {
         void onDialogConfirm(String address);
     }
