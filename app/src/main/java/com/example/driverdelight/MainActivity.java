@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String PREFERENCE_KEY = "AddressData";
     private static final String ADDRESS_KEY = "addressKey";
 
-    private static final int REQUEST_SCAN_FOR_DEVICE = 1;
     private BtleService.LocalBinder serviceBinder;
     private MetaWearBoard board = null;
 
@@ -68,21 +67,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
-        // TO-DO: Implement toolbar action
 
         switch (item.getItemId()) {
-            case R.id.action_scan:
+            case R.id.action_connect:
                 SharedPreferences data = getSharedPreferences(PREFERENCE_KEY, MODE_PRIVATE);
                 String address = data.getString(ADDRESS_KEY, DEFAULT_MAC_ADDRESS);
 
-                makeToast("Connecting");
+                makeToast(getString(R.string.toast_connecting));
                 retrieveMetaWearDevice(address);
                 break;
             case R.id.action_address:
                 AddressDialogFragment dialog = new AddressDialogFragment();
-                dialog.show(getSupportFragmentManager(), "manual_address");
-                //Toast.makeText(this, "Manually enter address", Toast.LENGTH_SHORT).show();
+                dialog.show(getSupportFragmentManager(), "manual_address_dialog");
                 break;
             case R.id.action_last:
                 retrieveMetaWearDevice(DEFAULT_MAC_ADDRESS);
@@ -139,16 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SCAN_FOR_DEVICE) {
-            if (resultCode == RESULT_OK) {
-                String address = data.getExtras().getString("device_address");
-                retrieveMetaWearDevice(address);
-            } else if (resultCode == RESULT_CANCELED) makeToast("Cancelled");
-        }
-    }
-
     private void retrieveMetaWearDevice(String address) {
         SharedPreferences data = getSharedPreferences(PREFERENCE_KEY, MODE_PRIVATE);
         SharedPreferences.Editor dataOutput = data.edit();
@@ -162,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public Void then(Task<Void> task) throws Exception {
                 if (task.isFaulted()) {
-                    makeToast("Failed to connect");
+                    makeToast(getString(R.string.toast_failed_to_connect));
                 } else {
                     deviceConnected();
                 }
@@ -173,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void deviceConnected() {
 
+        makeToast(getString(R.string.toast_connected));
         board.onUnexpectedDisconnect(new MetaWearBoard.UnexpectedDisconnectHandler() {
             @Override
             public void disconnected(int status) {
@@ -190,9 +177,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void attemptToReconnect(int tries) {
-        Log.d("MainActivity", "Reconnecting " + tries);
         if (tries-- == 0) {
-            makeToast("Unable to reconnect");
+            makeToast(getString(R.string.toast_unable_to_reconnect));
             return;
         }
         final int finalTries = tries;
@@ -201,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public Void then(Task<Void> task) throws Exception {
                 if (task.isFaulted()) {
                     attemptToReconnect(finalTries);
-                } else makeToast("Reconnected");
+                } else makeToast(getString(R.string.toast_reconnected));
                 return null;
             }
         });
@@ -216,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         board.disconnectAsync().continueWith(new Continuation<Void, Void>() {
             @Override
             public Void then(Task<Void> task) throws Exception {
-                makeToast("Device disconnected");
+                makeToast(getString(R.string.toast_disconnected));
                 return null;
             }
         });
@@ -224,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onDialogConfirm(String address) {
-        makeToast("Connecting");
+        makeToast(getString(R.string.toast_connecting));
         retrieveMetaWearDevice(address);
     }
 
