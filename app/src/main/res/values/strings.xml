@@ -3,12 +3,25 @@
 
 
     <!-- Bluetooth and metawear strings -->
-    <string name="bt_scan_btn">Scan for BLE device</string>
+    <string name="bt_scan_btn">Connect to last address</string>
     <string name="connect_to_address">Connect via address</string>
-    <string name="connect_to_last_device">Reconnect to last attempt</string>
+    <string name="connect_to_last_device">Connect to default device</string>
     <string name="disconnect">Disconnect</string>
-
     <string name="device_address">Device address</string>
     <string name="confirm">Connect</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Dialog strings -->
+    <string name="dialog_title">Enter device address</string>
+
+    <!-- Toast strings -->
+    <string name="toast_connecting">Connecting</string>
+    <string name="toast_connected">Device connected</string>
+    <string name="toast_disconnected">Device disconnected</string>
+    <string name="toast_failed_to_connect">Failed to connect</string>
+    <string name="toast_reconnecting">Reconnecting</string>
+    <string name="toast_reconnected">Reconnected</string>
+    <string name="toast_unable_to_reconnect">Unable to reconnect</string>
+    <string name="toast_cancelled">Cancelled</string>
+
 </resources>

@@ -23,7 +23,7 @@ public class AddressDialogFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.input_address_fragment, null);
 
         builder.setView(view)
-                .setTitle("Enter device address")
+                .setTitle(getString(R.string.dialog_title))
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
