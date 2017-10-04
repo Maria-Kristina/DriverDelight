@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.driverdelight.BleConnection.BLEActivity;
 import com.mbientlab.metawear.MetaWearBoard;
 import com.mbientlab.metawear.android.BtleService;
 import com.mbientlab.metawear.module.Led;
@@ -32,6 +31,7 @@ import bolts.Task;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         ServiceConnection, AddressDialogFragment.OnDialogConfirmListener {
+    private static final String DEFAULT_MAC_ADDRESS = "Ff:e3:70:08:b9:0d".toUpperCase();
     private static final String PREFERENCE_KEY = "AddressData";
     private static final String ADDRESS_KEY = "addressKey";
 
@@ -73,21 +73,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (item.getItemId()) {
             case R.id.action_scan:
-                Intent intent = new Intent(this, BLEActivity.class);
-                startActivityForResult(intent, REQUEST_SCAN_FOR_DEVICE);
+                SharedPreferences data = getSharedPreferences(PREFERENCE_KEY, MODE_PRIVATE);
+                String address = data.getString(ADDRESS_KEY, DEFAULT_MAC_ADDRESS);
+
+                makeToast("Connecting");
+                retrieveMetaWearDevice(address);
                 break;
             case R.id.action_address:
                 AddressDialogFragment dialog = new AddressDialogFragment();
                 dialog.show(getSupportFragmentManager(), "manual_address");
-                Toast.makeText(this, "Manually enter address", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Manually enter address", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_last:
-                SharedPreferences data = getSharedPreferences(PREFERENCE_KEY, MODE_PRIVATE);
-                String address = data.getString(ADDRESS_KEY, null);
-                if (address != null) {
-                    makeToast("Reconnecting");
-                    retrieveMetaWearDevice(address);
-                } else makeToast("No data of previous attempts");
+                retrieveMetaWearDevice(DEFAULT_MAC_ADDRESS);
                 break;
             case R.id.action_disconnect:
                 if (board != null && board.isConnected()) {
