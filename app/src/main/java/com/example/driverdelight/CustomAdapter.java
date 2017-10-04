@@ -17,7 +17,7 @@ public class CustomAdapter extends BaseAdapter {
     private Context mContext;
     private List<Contact> phoneList;
     private LayoutInflater mInflater;
-
+    private int myColor;
     private TextView nameView;
 
 

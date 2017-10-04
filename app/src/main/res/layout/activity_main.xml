@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
     tools:context="com.example.driverdelight.MainActivity">
 
     <include
@@ -25,7 +24,6 @@
 
     <ImageButton
         android:id="@+id/spotifyButton"
-
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_below="@+id/phoneButton"

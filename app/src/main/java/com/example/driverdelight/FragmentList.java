@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.hardware.SensorEvent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,21 +24,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by M-K on 23.8.2017.
- */
-
 public class FragmentList extends ListFragment {
     private FragmentDetail fragmentDetail;
     private Activity activity;
     private CustomAdapter adapter;
     private View view;
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Activity){
+        if (context instanceof Activity) {
             activity = (Activity) context;
         }
     }
@@ -53,15 +49,14 @@ public class FragmentList extends ListFragment {
         return view;
     }
 
-
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
         //sends the contact from the list to mainActivity
         try {
-            ((OnItemSelectedListener)activity).itemSelected(adapter.getItem(position));
-        }catch (ClassCastException e){
+            ((OnItemSelectedListener) activity).itemSelected(adapter.getItem(position));
+        } catch (ClassCastException e) {
             Log.d("EXCEPTION", "ONLISTITEMSELECTED");
         }
 
@@ -76,7 +71,7 @@ public class FragmentList extends ListFragment {
 
     }
 
-    private class LoadContactsTask extends AsyncTask <Void, Void, List<Contact>>{
+    private class LoadContactsTask extends AsyncTask<Void, Void, List<Contact>> {
 
         @Override
         protected List<Contact> doInBackground(Void... voids) {
@@ -103,7 +98,6 @@ public class FragmentList extends ListFragment {
                         new String[]{Manifest.permission.READ_CONTACTS},
                         PERMISSIONS_REQUEST_READ_CONTACTS);
 
-
             } else {
 
                 String phoneNumber;
@@ -119,7 +113,6 @@ public class FragmentList extends ListFragment {
 
                 ContentResolver contentResolver = getActivity().getContentResolver();
                 Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
-
 
                 // Loop for every contact in the phone
                 if (cursor.getCount() > 0) {
@@ -141,9 +134,9 @@ public class FragmentList extends ListFragment {
                             while (phoneCursor.moveToNext()) {
                                 phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
 
-                                if (phoneNumbers.contains(phoneNumber) == false){
+                                if (phoneNumbers.contains(phoneNumber) == false) {
                                     phoneNumbers.add(phoneNumber);
-                                    list.add(new Contact(name, phoneNumber,contact_id));
+                                    list.add(new Contact(name, phoneNumber, contact_id));
                                 }
 
                             }
@@ -155,7 +148,5 @@ public class FragmentList extends ListFragment {
             }
             return list;
         }
-
-
     }
 }

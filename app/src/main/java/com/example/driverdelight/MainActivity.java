@@ -9,10 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,7 +36,6 @@ import bolts.Task;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         ServiceConnection, AddressDialogFragment.OnDialogConfirmListener, SensorEventListener {
-
     private static final String DEFAULT_MAC_ADDRESS = "Ff:e3:70:08:b9:0d".toUpperCase();
 
     private static final String PREFERENCE_KEY = "AddressData";
@@ -41,23 +44,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BtleService.LocalBinder serviceBinder;
     private MetaWearBoard board = null;
 
+    private SensorManager mSensorManager;
+    private Sensor mLight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
 
-
-        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},1);
         getApplicationContext().bindService(new Intent(this, BtleService.class), this, BIND_AUTO_CREATE);
 
         ImageButton phoneButton = (ImageButton)findViewById(R.id.phoneButton);
         ImageButton spotifyButton = (ImageButton)findViewById(R.id.spotifyButton);
         phoneButton.setOnClickListener(this);
         spotifyButton.setOnClickListener(this);
+
+        /**LightSensor implementation*/
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
     }
 
@@ -219,5 +227,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void makeToast(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
+        super.onResume();
+    }
+    @Override
+    protected void onPause() {
+        mSensorManager.unregisterListener(this);
+        super.onPause();
+    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if(sensor.getType() == Sensor.TYPE_LIGHT){
+            Log.i("Sensor Changed", "Accuracy :" + accuracy);
+        }
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+
+        if( event.sensor.getType() == Sensor.TYPE_LIGHT){
+            if (event.values[0] < 400) {
+                setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundDark));
+
+            } else {
+                setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
+            }
+        }
+    }
+
+    public void setActivityBackgroundColor(int color) {
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(color);
+
     }
 }
