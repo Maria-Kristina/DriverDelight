@@ -9,7 +9,7 @@
         android:id="@+id/nameView"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:textColor="#e7e7e7"
+        android:textColor="#8F0200"
         android:text="Maria"
         android:textSize="45dp"
         android:textAlignment="center"

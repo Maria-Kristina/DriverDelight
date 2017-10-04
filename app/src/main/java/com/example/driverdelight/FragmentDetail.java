@@ -6,6 +6,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,11 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-/**
- * Created by M-K on 23.8.2017.
- */
+public class FragmentDetail extends Fragment implements SensorEventListener {
 
-public class FragmentDetail extends Fragment {
+    private SensorManager sensorManager;
+    private Sensor mPoximity;
+
     private TextView nameView, numberView;
     Activity activity;
     private static final int PERMISSIONS_REQUEST_CALL_PHONE = 500;
@@ -29,23 +33,28 @@ public class FragmentDetail extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof Activity){
+        if (context instanceof Activity) {
             activity = (Activity) context;
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_fragment, container, false);
 
+        /** Get system service to interact with sensors */
+        sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+
+        /** Find default proximity sensor */
+        mPoximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+
         nameView = view.findViewById(R.id.textView);
         numberView = view.findViewById(R.id.numberView);
 
         try {
-            nameView.setText((((OnItemSelectedListener)activity).getItemSelected()).getName());
-            numberView.setText((((OnItemSelectedListener)activity).getItemSelected()).getPhoneNumber());
-        }catch (ClassCastException e){
+            nameView.setText((((OnItemSelectedListener) activity).getItemSelected()).getName());
+            numberView.setText((((OnItemSelectedListener) activity).getItemSelected()).getPhoneNumber());
+        } catch (ClassCastException e) {
             Log.d("DetailFragmentEXCEPTION", e.toString());
         }
 
@@ -71,5 +80,28 @@ public class FragmentDetail extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        sensorManager.unregisterListener(this);
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if (sensor.getType() == Sensor.TYPE_LIGHT) {
+            Log.i("Sensor Changed", "Accuracy :" + accuracy);
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+
+            int val = (int) event.values[0];
+
+        }
+
     }
 }
