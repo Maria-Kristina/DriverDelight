@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
@@ -23,6 +24,7 @@ public class FragmentDetail extends Fragment {
     private TextView nameView, numberView;
     Activity activity;
     private static final int PERMISSIONS_REQUEST_CALL_PHONE = 500;
+    private ImageButton imgBtn;
 
 
     @Override
@@ -41,6 +43,7 @@ public class FragmentDetail extends Fragment {
 
         nameView = view.findViewById(R.id.textView);
         numberView = view.findViewById(R.id.numberView);
+        imgBtn = view.findViewById(R.id.callButton);
 
         try {
             nameView.setText((((OnItemSelectedListener)activity).getItemSelected()).getName());
@@ -49,7 +52,7 @@ public class FragmentDetail extends Fragment {
             Log.d("DetailFragmentEXCEPTION", e.toString());
         }
 
-        numberView.setOnClickListener(new View.OnClickListener() {
+        imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
