@@ -101,7 +101,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-            if (event.values[0] == 0) {
+            if (event.values[0] == 1) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                         && activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
