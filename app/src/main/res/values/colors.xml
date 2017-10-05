@@ -6,4 +6,5 @@
     <color name="colorPrimaryDark">#1d1d1d</color>
     <color name="colorAccent">#FF4081</color>
     <color name="txtColor">#ffffff</color>
+    <color name="primary_text_default_material_light">#deffffff</color>
 </resources>
