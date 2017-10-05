@@ -432,14 +432,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if(sensor.getType() == Sensor.TYPE_LIGHT){
-            Log.i("Sensor Changed", "Accuracy :" + accuracy);
+            Log.i("Sensor Changed", "Accuracy0: " + accuracy);
         }
     }
 
     public void onSensorChanged(SensorEvent event) {
 
         if( event.sensor.getType() == Sensor.TYPE_LIGHT){
-            if (event.values[0] < 400) {
+            if (event.values[0] < 500) {
                 setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundDark));
 
             } else {

@@ -55,7 +55,7 @@ public class PhoneActivity extends Activity implements SensorEventListener, OnIt
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if (sensor.getType() == Sensor.TYPE_LIGHT) {
-            Log.i("Sensor Changed", "Accuracy :" + accuracy);
+            Log.i("Sensor Changed", "Accuracy1: " + accuracy);
         }
     }
 

@@ -23,7 +23,7 @@ import android.widget.TextView;
 public class FragmentDetail extends Fragment implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private Sensor mPoximity;
+    private Sensor mProximity;
 
     private TextView nameView, numberView;
     Activity activity;
@@ -48,7 +48,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
 
         /** Find default proximity sensor */
-        mPoximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         nameView = view.findViewById(R.id.textView);
         numberView = view.findViewById(R.id.numberView);
@@ -86,6 +86,14 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, mProximity,
+                sensorManager.SENSOR_DELAY_NORMAL);
+
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
@@ -94,30 +102,33 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if (sensor.getType() == Sensor.TYPE_LIGHT) {
-            Log.i("Sensor Changed", "Accuracy :" + accuracy);
+            Log.i("Sensor Changed", "Accuracy3: " + accuracy);
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-            if (event.values[0] == 1) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        && activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
-                        != PackageManager.PERMISSION_GRANTED) {
+            if (event.values[0] < mProximity.getMaximumRange()) {
 
-                    requestPermissions(
-                            new String[]{Manifest.permission.CALL_PHONE},
-                            PERMISSIONS_REQUEST_CALL_PHONE);
-                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                            && activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
+                            != PackageManager.PERMISSION_GRANTED) {
 
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    callIntent.setData(Uri.parse("tel:" + numberView.getText()));
-                    getActivity().startActivity(callIntent);
-                }
+                        requestPermissions(
+                                new String[]{Manifest.permission.CALL_PHONE},
+                                PERMISSIONS_REQUEST_CALL_PHONE);
+                    } else {
+
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        callIntent.setData(Uri.parse("tel:" + numberView.getText()));
+                        getActivity().startActivity(callIntent);
+                    }
             }
         }
     }
 }
+
