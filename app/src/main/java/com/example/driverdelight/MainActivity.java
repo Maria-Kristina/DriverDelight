@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ServiceConnection, AddressDialogFragment.OnDialogConfirmListener, SensorEventListener {
 
     // Default device mac address
-    private static final String DEFAULT_MAC_ADDRESS = "Ff:e3:70:08:b9:0d".toUpperCase();
+    private static final String DEFAULT_MAC_ADDRESS = "FF:E3:70:08:B9:0D";
 
     // SharedPreference keys
     private static final String PREFERENCE_KEY = "AddressData";
@@ -68,17 +68,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isConsistence;
     private boolean allowSwitch;
 
+    // Internal sensor
     private SensorManager mSensorManager;
     private Sensor mLight;
 
-    // Attempt to make toasts
-    private MainActivity mainAct;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
-        mainAct = this;
 
         // Initialize Handler and DataProcessor
         handler = new Handler();
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         phoneButton.setOnClickListener(this);
         spotifyButton.setOnClickListener(this);
 
-        /**LightSensor implementation*/
+        // LightSensor implementation
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
