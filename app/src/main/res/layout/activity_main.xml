@@ -20,7 +20,7 @@
         android:background="@drawable/buttonshape"
         android:elevation="5dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/phone3" />
+        android:src="@drawable/phone4" />
 
     <ImageButton
         android:id="@+id/spotifyButton"
