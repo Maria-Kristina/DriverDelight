@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -110,6 +111,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        // Basically have to reset all the elements
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        findViewById(R.id.phoneButton).setOnClickListener(this);
+        findViewById(R.id.spotifyButton).setOnClickListener(this);
     }
 
     @Override

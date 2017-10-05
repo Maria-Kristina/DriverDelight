@@ -1,18 +1,21 @@
 <resources>
     <string name="app_name">Drivers Delight</string>
 
+    <!-- Content description strings -->
+    <string name="content_phone">Go to phone book</string>
+    <string name="content_spotify">Go to Spotify</string>
 
-    <!-- Bluetooth and metawear strings -->
+    <!-- Bluetooth and MetaWear strings -->
     <string name="bt_scan_btn">Connect to last address</string>
     <string name="connect_to_address">Connect via address</string>
     <string name="connect_to_last_device">Connect to default device</string>
     <string name="disconnect">Disconnect</string>
     <string name="device_address">Device address</string>
-    <string name="confirm">Connect</string>
-    <string name="cancel">Cancel</string>
 
     <!-- Dialog strings -->
     <string name="dialog_title">Enter device address</string>
+    <string name="confirm">Connect</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Toast strings -->
     <string name="toast_connecting">Connecting</string>

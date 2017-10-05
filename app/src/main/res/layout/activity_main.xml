@@ -18,6 +18,7 @@
         android:layout_below="@id/toolbar"
         android:layout_marginTop="35dp"
         android:background="@drawable/buttonshape"
+        android:contentDescription="@string/content_phone"
         android:elevation="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/phone4" />
@@ -30,6 +31,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:background="@drawable/buttonshape"
+        android:contentDescription="@string/content_spotify"
         android:elevation="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/spotify" />
