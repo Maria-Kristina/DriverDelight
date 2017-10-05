@@ -28,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.mbientlab.metawear.Data;
 import com.mbientlab.metawear.MetaWearBoard;
@@ -70,11 +71,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SensorManager mSensorManager;
     private Sensor mLight;
 
+    // Attempt to make toasts
+    private MainActivity mainAct;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundLight));
+        mainAct = this;
 
         // Initialize Handler and DataProcessor
         handler = new Handler();
@@ -208,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     Dialog methods
-    */
+     * Dialog methods
+     */
     @Override
     public void onDialogConfirm(String address) {
         // Connect to device
@@ -217,8 +221,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     Service binder methods
-    */
+     * Service binder methods
+     */
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         serviceBinder = (BtleService.LocalBinder) iBinder;
@@ -230,10 +234,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     BLE and MetaWear connection methods
-    */
+     * BLE and MetaWear connection methods
+     */
     private void retrieveMetaWearDevice(String address) {
         Log.i("MainActivity", getString(R.string.toast_connecting) + " to " + address);
+        makeToast(getString(R.string.toast_connecting));
 
         // Save device address to SharedPreference
         SharedPreferences data = getSharedPreferences(PREFERENCE_KEY, MODE_PRIVATE);
@@ -249,6 +254,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public Void then(Task<Void> task) throws Exception {
                 if (task.isFaulted()) {
                     Log.i("MainActivity", getString(R.string.toast_failed_to_connect));
+                    makeToast(getString(R.string.toast_failed_to_connect));
+                    
                 } else {
                     deviceConnected();
                 }
@@ -259,11 +266,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void deviceConnected() {
         Log.i("MainActivity", getString(R.string.toast_connected));
+        makeToast(getString(R.string.toast_connected));
+        
 
         // Try to reconnect 3 times if device disconnects unexpectedly
         board.onUnexpectedDisconnect(new MetaWearBoard.UnexpectedDisconnectHandler() {
             @Override
             public void disconnected(int status) {
+                makeToast(getString(R.string.toast_disconnected));
                 attemptToReconnect(3);
             }
         });
@@ -281,8 +291,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void attemptToReconnect(int tries) {
         Log.i("MainActivity", "Attempt to reconnect: " + tries);
+        makeToast(getString(R.string.toast_reconnecting));
         if (tries-- == 0) {
             Log.i("MainActivity", getString(R.string.toast_unable_to_reconnect));
+            makeToast(getString(R.string.toast_unable_to_reconnect));
             return;
         }
         final int finalTries = tries;
@@ -293,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     attemptToReconnect(finalTries);
                 } else {
                     Log.i("MainActivity", getString(R.string.toast_reconnected));
+                    makeToast(getString(R.string.toast_reconnected));
                 }
                 return null;
             }
@@ -310,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public Void then(Task<Void> task) throws Exception {
                 Log.i("MainActivity", getString(R.string.toast_disconnected));
+                makeToast(getString(R.string.toast_disconnected));
                 return null;
             }
         });
@@ -324,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final Accelerometer acc = board.getModule(Accelerometer.class);
         if (acc != null) {
             acc.configure()
-                    .odr(5f)        // Frequency = 5Hz
+                    .odr(2f)        // Frequency = 2Hz
                     .range(4f)      // Range = 4g
                     .commit();
             acc.acceleration().addRouteAsync(new RouteBuilder() {
@@ -339,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.i("MainActivity", "Acceleration: " + acceleration);
 
                             // React if acceleration value exceed threshold
-                            if (acceleration > 0.1) {
+                            if (acceleration > 0.15) {
                                 // Turn down the volume if not already done so
                                 volumeDown();
                                 // Signal that car speed is not stable for 7.5 seconds
@@ -405,8 +419,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     Sensor methods
-    */
+     * Sensor methods
+     */
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if(sensor.getType() == Sensor.TYPE_LIGHT){
             Log.i("Sensor Changed", "Accuracy :" + accuracy);
@@ -431,4 +445,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    /**
+     * Utility methods
+     */
+    private void makeToast(final String message) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
