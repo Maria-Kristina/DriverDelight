@@ -113,20 +113,20 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
 
             if (event.values[0] < mProximity.getMaximumRange()) {
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                            && activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
-                            != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                        && activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED) {
 
-                        requestPermissions(
-                                new String[]{Manifest.permission.CALL_PHONE},
-                                PERMISSIONS_REQUEST_CALL_PHONE);
-                    } else {
+                    requestPermissions(
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            PERMISSIONS_REQUEST_CALL_PHONE);
+                } else {
 
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        callIntent.setData(Uri.parse("tel:" + numberView.getText()));
-                        getActivity().startActivity(callIntent);
-                    }
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    callIntent.setData(Uri.parse("tel:" + numberView.getText()));
+                    getActivity().startActivity(callIntent);
+                }
             }
         }
     }
