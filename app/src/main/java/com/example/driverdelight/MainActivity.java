@@ -262,7 +262,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public Void then(Task<Void> task) throws Exception {
                 if (task.isFaulted()) {
-                    Log.i("MainActivity", getString(R.string.toast_failed_to_connect));
                     makeToast(getString(R.string.toast_failed_to_connect));
                     
                 } else {
@@ -274,7 +273,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void deviceConnected() {
-        Log.i("MainActivity", getString(R.string.toast_connected));
         makeToast(getString(R.string.toast_connected));
         
 
@@ -302,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("MainActivity", "Attempt to reconnect: " + tries);
         makeToast(getString(R.string.toast_reconnecting));
         if (tries-- == 0) {
-            Log.i("MainActivity", getString(R.string.toast_unable_to_reconnect));
             makeToast(getString(R.string.toast_unable_to_reconnect));
             return;
         }
@@ -313,7 +310,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (task.isFaulted()) {
                     attemptToReconnect(finalTries);
                 } else {
-                    Log.i("MainActivity", getString(R.string.toast_reconnected));
                     makeToast(getString(R.string.toast_reconnected));
                 }
                 return null;
@@ -331,7 +327,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         board.disconnectAsync().continueWith(new Continuation<Void, Void>() {
             @Override
             public Void then(Task<Void> task) throws Exception {
-                Log.i("MainActivity", getString(R.string.toast_disconnected));
                 makeToast(getString(R.string.toast_disconnected));
                 return null;
             }
@@ -342,7 +337,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * MetaWear data processing methods
      */
     private void onMetaWearConnected() {
-
         // Retrieve and configure accelerometer
         final Accelerometer acc = board.getModule(Accelerometer.class);
         if (acc != null) {
@@ -401,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return null;
                 }
             });
-        } else Log.i("MainActivity", "No accelerator detected");
+        }
     }
 
 
