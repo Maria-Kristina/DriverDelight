@@ -22,7 +22,7 @@
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="5"
-        android:src="@drawable/phone3" />
+        android:src="@drawable/phone4" />
 
     <ImageButton
         android:id="@+id/spotifyButton"
