@@ -26,7 +26,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
     private Sensor mProximity;
 
     private TextView nameView, numberView;
-    Activity activity;
+    private Activity activity;
     private static final int PERMISSIONS_REQUEST_CALL_PHONE = 500;
     private ImageButton imgBtn;
 
@@ -65,6 +65,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Permission check
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                         && activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -73,7 +74,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
                             new String[]{Manifest.permission.CALL_PHONE},
                             PERMISSIONS_REQUEST_CALL_PHONE);
                 } else {
-
+                    //A phone call is made
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     callIntent.setData(Uri.parse("tel:" + numberView.getText()));
@@ -91,7 +92,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
     public void onResume() {
         super.onResume();
         sensorManager.registerListener(this, mProximity,
-                sensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     // Stops following the sensors data
@@ -116,6 +117,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
 
             if (event.values[0] < mProximity.getMaximumRange()) {
 
+                //permission check
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                         && activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -124,7 +126,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
                             new String[]{Manifest.permission.CALL_PHONE},
                             PERMISSIONS_REQUEST_CALL_PHONE);
                 } else {
-
+                    //a phone call is made
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     callIntent.setData(Uri.parse("tel:" + numberView.getText()));
