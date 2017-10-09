@@ -9,11 +9,13 @@ class DataProcessor {
     private boolean hasG;
     private ArrayList<Acceleration> accelerationArrayList;
 
+    // Creates new values
     DataProcessor() {
         this.accelerationArrayList = new ArrayList<>();
         this.hasG = false;
     }
 
+    // Fetches the different acceleration data that metawear sends
     double newData(Acceleration acceleration) {
         if (!hasG) {
             accelerationArrayList.add(acceleration);

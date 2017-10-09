@@ -109,7 +109,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
         }
     }
 
-    // If the proximity sensor gets a change it will call
+    // If the proximity sensor gets a change it will make a call
     @Override
     public void onSensorChanged(SensorEvent event) {
 

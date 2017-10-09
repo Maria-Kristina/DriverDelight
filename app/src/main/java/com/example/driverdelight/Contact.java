@@ -11,14 +11,17 @@ public class Contact implements Comparable<Contact>{
         this.id =id;
     }
 
+    // Returns value "name"
     public String getName(){
         return name;
     }
 
+    // Returns value "phoneNumber"
     public String getPhoneNumber(){
         return phoneNumber;
     }
 
+    // Helps to arrange the contact list into alphabetical order
     @Override
     public int compareTo(Contact contact) {
         return name.compareTo(contact.name);

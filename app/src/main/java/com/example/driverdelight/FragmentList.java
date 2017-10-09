@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ public class FragmentList extends ListFragment {
     private CustomAdapter adapter;
     private View view;
 
+    // gets the instance of the parent activity
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -46,6 +48,7 @@ public class FragmentList extends ListFragment {
         return view;
     }
 
+    // Sets a listener to contact list
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
@@ -64,24 +67,25 @@ public class FragmentList extends ListFragment {
 
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
     }
 
     private class LoadContactsTask extends AsyncTask<Void, Void, List<Contact>> {
 
+        // Does fetchContact in a separate thread
         @Override
         protected List<Contact> doInBackground(Void... voids) {
             return fetchContacts();
         }
 
+        // Puts the list in alphabetical order after "doInBackground" has been completed
         @Override
         protected void onPostExecute(List<Contact> contacts) {
             Collections.sort(contacts);
-            adapter = new CustomAdapter(
-                    view.getContext(), contacts);
+            adapter = new CustomAdapter(view.getContext(), contacts);
             setListAdapter(adapter);
         }
 
+        // Gets contacts from the phone
         private List<Contact> fetchContacts() {
             List<Contact> list = new ArrayList<>();
             int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
@@ -134,7 +138,6 @@ public class FragmentList extends ListFragment {
                                     phoneNumbers.add(phoneNumber);
                                     list.add(new Contact(name, phoneNumber, contact_id));
                                 }
-
                             }
                             phoneCursor.close();
                         }
