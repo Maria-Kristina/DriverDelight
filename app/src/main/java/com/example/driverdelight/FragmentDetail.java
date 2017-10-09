@@ -90,7 +90,6 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
         super.onResume();
         sensorManager.registerListener(this, mProximity,
                 sensorManager.SENSOR_DELAY_NORMAL);
-
     }
 
     @Override

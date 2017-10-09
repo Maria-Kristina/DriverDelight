@@ -63,7 +63,7 @@ public class PhoneActivity extends Activity implements SensorEventListener, OnIt
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
 
-            if (event.values[0] < 400) {
+            if (event.values[0] < 500) {
                 setActivityBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundDark));
 
             } else {

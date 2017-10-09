@@ -1,9 +1,5 @@
 package com.example.driverdelight;
 
-/**
- * Created by M-K on 25.9.2017.
- */
-
 public class Contact implements Comparable<Contact>{
     private String name;
     private String phoneNumber;
