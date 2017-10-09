@@ -9,10 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-/**
- * Created by Edward on 01/10/2017.
- */
-
 public class AddressDialogFragment extends DialogFragment {
 
     @Override

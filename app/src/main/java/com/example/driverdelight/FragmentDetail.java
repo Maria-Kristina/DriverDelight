@@ -44,10 +44,10 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_fragment, container, false);
 
-        /** Get system service to interact with sensors */
+        // Get system service to interact with sensors
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
 
-        /** Find default proximity sensor */
+        // Find default proximity sensor
         mProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         nameView = view.findViewById(R.id.textView);
@@ -61,6 +61,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
             Log.d("DetailFragmentEXCEPTION", e.toString());
         }
 
+        // If button is pressed a call will be made
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +86,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
         return view;
     }
 
+    // Starts to follow the sensors data
     @Override
     public void onResume() {
         super.onResume();
@@ -92,6 +94,7 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
                 sensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    // Stops following the sensors data
     @Override
     public void onPause() {
         super.onPause();
@@ -99,12 +102,13 @@ public class FragmentDetail extends Fragment implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
+    // Measures the amount of light
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if (sensor.getType() == Sensor.TYPE_LIGHT) {
-            Log.i("Sensor Changed", "Accuracy3: " + accuracy);
         }
     }
 
+    // If the proximity sensor gets a change it will call
     @Override
     public void onSensorChanged(SensorEvent event) {
 

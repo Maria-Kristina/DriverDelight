@@ -23,7 +23,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -100,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Bind BLE service
         getApplicationContext().bindService(new Intent(this, BtleService.class), this, BIND_AUTO_CREATE);
 
+        // Adding ClickListeners to buttons
         ImageButton phoneButton = (ImageButton)findViewById(R.id.phoneButton);
         ImageButton spotifyButton = (ImageButton)findViewById(R.id.spotifyButton);
         phoneButton.setOnClickListener(this);
@@ -128,12 +128,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
     }
 
+    // Starts listening to sensor
     @Override
     protected void onResume() {
         mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
     }
 
+    // Stops listening
     @Override
     protected void onPause() {
         mSensorManager.unregisterListener(this);
@@ -143,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Button method
      */
+
+    // Button methods
     @Override
     public void onClick(View view) {
         Intent intent = new Intent();
@@ -160,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 } catch (ActivityNotFoundException e) {
-                    Log.d("ONCLICK", e.toString());
                 }
                 break;
 
@@ -171,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Action bar methods
      */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -230,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Service binder methods
      */
+
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         serviceBinder = (BtleService.LocalBinder) iBinder;
@@ -243,8 +248,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * BLE and MetaWear connection methods
      */
+
     private void retrieveMetaWearDevice(String address) {
-        Log.i("MainActivity", getString(R.string.toast_connecting) + " to " + address);
         makeToast(getString(R.string.toast_connecting));
 
         // Save device address to SharedPreference
@@ -295,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void attemptToReconnect(int tries) {
-        Log.i("MainActivity", "Attempt to reconnect: " + tries);
         makeToast(getString(R.string.toast_reconnecting));
         if (tries-- == 0) {
             makeToast(getString(R.string.toast_unable_to_reconnect));
@@ -351,7 +355,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             // Get acceleration value
                             double acceleration = dataProcessor.newData(data.value(Acceleration.class));
-                            Log.i("MainActivity", "Acceleration: " + acceleration);
 
                             // React if acceleration value exceed threshold
                             if (acceleration > 0.15) {
@@ -400,6 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Volume altering methods
      */
+
     private void volumeDown() {
         // Prevent turning volume down multiple times
         if (backToNormal) {
@@ -422,12 +426,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Sensor methods
      */
+
+    // Measures the amount of light
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if(sensor.getType() == Sensor.TYPE_LIGHT){
-            Log.i("Sensor Changed", "Accuracy0: " + accuracy);
         }
     }
 
+    // Depending on the amount of light the background changes color
     public void onSensorChanged(SensorEvent event) {
 
         if( event.sensor.getType() == Sensor.TYPE_LIGHT){
@@ -440,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Method to change the background color
     public void setActivityBackgroundColor(int color) {
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(color);

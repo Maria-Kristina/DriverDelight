@@ -1,12 +1,7 @@
 package com.example.driverdelight;
 
 import com.mbientlab.metawear.data.Acceleration;
-
 import java.util.ArrayList;
-
-/**
- * Created by Edward on 04/10/2017.
- */
 
 class DataProcessor {
     // Used to calculate current value of G

@@ -6,12 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import java.util.List;
-
-/**
- * Created by M-K on 22.9.2017.
- */
 
 public class CustomAdapter extends BaseAdapter {
     private Context mContext;
@@ -20,14 +15,13 @@ public class CustomAdapter extends BaseAdapter {
     private int myColor;
     private TextView nameView;
 
-
     public CustomAdapter(Context context, List<Contact> list) {
         this.mContext = context;
         this.phoneList = list;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-
+    // Counts the contact lists length
     @Override
     public int getCount() {
         return phoneList.size();

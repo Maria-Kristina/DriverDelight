@@ -8,18 +8,15 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.hardware.SensorEvent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +54,6 @@ public class FragmentList extends ListFragment {
         try {
             ((OnItemSelectedListener) activity).itemSelected(adapter.getItem(position));
         } catch (ClassCastException e) {
-            Log.d("EXCEPTION", "ONLISTITEMSELECTED");
         }
 
         FragmentTransaction fragmentTransaction =
